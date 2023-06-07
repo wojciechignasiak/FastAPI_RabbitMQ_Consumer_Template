@@ -2,7 +2,7 @@
 FROM python:3.11-alpine
 
 # set working directory
-WORKDIR /usr/src/example-service
+WORKDIR /usr/src/fastapi-rabbitmq
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -23,9 +23,9 @@ COPY . .
 
 # add entrypoint.sh
 COPY ./entrypoint.sh .
-RUN chmod a+x /usr/src/example-service/entrypoint.sh
+RUN chmod a+x /usr/src/fastapi-rabbitmq/entrypoint.sh
 
 # run entrypoint.sh
-ENTRYPOINT ["sh", "/usr/src/example-service/entrypoint.sh"]
+ENTRYPOINT ["sh", "/usr/src/fastapi-rabbitmq/entrypoint.sh"]
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

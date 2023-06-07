@@ -12,13 +12,15 @@ volumes:
 services:
 ######################FastAPI SERVICES - Beginning###########################
 
-  example-service:
-    container_name: example-service
-    build: ./example-service
-    image: ghcr.io/wojciechignasiak/example-service:0.0.1
+  fastapi-rabbitmq:
+    container_name: fastapi-rabbitmq
+    build: ./fastapi-rabbitmq
+    image: ghcr.io/wojciechignasiak/fastapi-rabbitmq:0.0.1
     environment:
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
     ports:
       - 8081:80
     expose:
@@ -26,7 +28,7 @@ services:
     networks:
       - example-network
     volumes:
-      - ./example-service:/usr/src/example-service/
+      - ./fastapi-rabbitmq:/usr/src/fastapi-rabbitmq/
     depends_on:
       - rabbitmq3
 ######################FastAPI SERVICES - End###########################
