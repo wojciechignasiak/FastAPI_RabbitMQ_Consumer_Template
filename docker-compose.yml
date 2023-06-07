@@ -1,0 +1,54 @@
+version: '3'
+
+networks:
+  example-network:
+    name: example-network
+    driver: bridge
+
+volumes:
+  rabbitmq-volume:
+    name: rabbitmq-volume
+
+services:
+######################FastAPI SERVICES - Beginning###########################
+
+  example-service:
+    container_name: example-service
+    build: ./example-service
+    image: ghcr.io/wojciechignasiak/example-service:0.0.1
+    environment:
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    ports:
+      - 8081:80
+    expose:
+      - 80
+    networks:
+      - example-network
+    volumes:
+      - ./example-service:/usr/src/example-service/
+    depends_on:
+      - rabbitmq3
+######################FastAPI SERVICES - End###########################
+
+######################RabbitMQ SERVICES - Beginning###########################
+  rabbitmq3:
+        container_name: "rabbitmq"
+        image: rabbitmq:3.11.13-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+        networks:
+            - example-network
+        restart: always
+        volumes:
+          - rabbitmq-volume:/var/lib/rabbitmq
+        ports:
+            # AMQP protocol port
+            - '5672:5672'
+            # HTTP management UI
+            - '15672:15672'
+        expose:
+          - 5672
+######################RabbitMQ SERVICES - End###########################
+
